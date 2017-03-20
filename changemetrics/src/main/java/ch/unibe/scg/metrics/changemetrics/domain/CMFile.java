@@ -188,4 +188,9 @@ public class CMFile {
 	public void rename(String newPath) {
 		this.file = newPath;
 	}
+	
+	public String toString() {
+		return "CMFile ["+file+", revisions: "+revisions+", refactorings: "+refactorings+", bugfixes: "+bugfixes+", authors: "
+				+String.join(",", authors)+", locAdded: "+locAdded+", locRemoved: "+locRemoved+" codeChurn: "+codeChurn+", totalChangeset: "+totalChangeset;
+	}
 }
