@@ -1,4 +1,4 @@
-package ch.unibe.scg.metrics.changemetrics.model;
+package ch.unibe.scg.metrics.changemetrics.domain;
 
 import java.util.List;
 
