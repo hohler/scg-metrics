@@ -103,9 +103,10 @@ public class CMFile {
 		authors.add(developer.getName());
 	}
 
+	// TODO: make regex and remove post/prefix
 	private void countBugFixes(String msg) {
 		if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfixes++;
-		if(msg.contains("bug")) bugfixes++;
+		else if(msg.contains("bug")) bugfixes++;
 	}
 
 	private void countRevision(Modification modification) {
