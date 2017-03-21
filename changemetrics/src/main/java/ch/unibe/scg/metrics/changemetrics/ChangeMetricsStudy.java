@@ -1,7 +1,10 @@
 package ch.unibe.scg.metrics.changemetrics;
 
+import java.util.Arrays;
+
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
+import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.scm.SCMRepository;
 
@@ -26,6 +29,7 @@ public class ChangeMetricsStudy implements Study {
 		.in(repository)
 		.through(range)
 		.process(new ChangeMetricsProcessor(repoInfo))
+		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")))
 		.mine();
 
 	}
