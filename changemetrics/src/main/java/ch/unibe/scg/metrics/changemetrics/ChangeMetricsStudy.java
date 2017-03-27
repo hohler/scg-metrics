@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
+import org.repodriller.filter.commit.OnlyInMainBranch;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.scm.SCMRepository;
@@ -15,10 +16,12 @@ public class ChangeMetricsStudy implements Study {
 	private SCMRepository repository;
 	private CommitRange range;
 	private CMRepository repoInfo;
+	private int threads;
 	
-	public ChangeMetricsStudy(SCMRepository repository, CommitRange range) {
+	public ChangeMetricsStudy(SCMRepository repository, CommitRange range, int threads) {
 		this.repository = repository;
 		this.range = range;
+		this.threads = threads;
 	}
 	
 	public void execute() {
@@ -28,8 +31,9 @@ public class ChangeMetricsStudy implements Study {
 		new RepositoryMining()
 		.in(repository)
 		.through(range)
+		.withThreads(threads)
 		.process(new ChangeMetricsProcessor(repoInfo))
-		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")))
+		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
 		.mine();
 
 	}

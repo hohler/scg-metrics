@@ -18,5 +18,10 @@
         <priority value="INFO"/>
         <appender-ref ref="main"/>
     </category>
+    
+    <category name="ch.unibe.scg.metrics.changemetrics">
+        <priority value="DEBUG"/>
+        <appender-ref ref="main"/>
+    </category>
 
 </log4j:configuration>

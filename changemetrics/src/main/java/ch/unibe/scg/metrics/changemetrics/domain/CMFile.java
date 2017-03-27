@@ -136,7 +136,8 @@ public class CMFile {
 			denominator += w.locAdded;
 		}
 		
-		weightedAge = numerator / denominator;
+		if(numerator == 0 || denominator == 0) weightedAge = 0;
+		else weightedAge = numerator / denominator;
 		
 	}
 
