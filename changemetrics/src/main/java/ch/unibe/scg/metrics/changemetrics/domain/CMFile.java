@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Developer;
 import org.repodriller.domain.Modification;
@@ -35,8 +34,6 @@ public class CMFile {
 	private double weightedAge;
 	
 	private Map<Integer, WeightedAgeHolder> weightedAgeRecords;
-	
-	// private Logger logger = Logger.getLogger(CMFile.class);
 
 	public CMFile(String file) {
 		this.file = file;

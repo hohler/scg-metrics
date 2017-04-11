@@ -20,7 +20,9 @@ public class CMRepository {
 		String fileName = m.getNewPath();
 		
 		if(!files.containsKey(fileName)) {
-			files.put(fileName, new CMFile(fileName));
+			CMFile f = new CMFile(fileName);
+			files.put(fileName, f);
+			return f;
 		}
 		
 		return files.get(fileName);
