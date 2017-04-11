@@ -25,6 +25,11 @@ public class SZZRepository {
 		
 		return files.get(fileName);
 	}
+	
+	public SZZFile get(Modification m) {
+		if(!files.containsKey(m.getNewPath())) return null;
+		return files.get(m.getNewPath());
+	}
 
 	public void rename(Modification m) {
 		String oldPath = m.getOldPath();

@@ -17,24 +17,25 @@ import ch.unibe.scg.metrics.szz.domain.SZZFile;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 
-public class SZZProcessor implements CommitVisitor {
+public class SZZProcessor2 implements CommitVisitor {
 
 	private SZZRepository repository;
 	
-	public SZZProcessor(SZZRepository repository) {
+	public SZZProcessor2(SZZRepository repository) {
 		this.repository = repository;
 	}
 	
 	public void process(SCMRepository repo, Commit commit, PersistenceMechanism writer) {
-		if(commit.getModifications().size() > 10) return; // to much modifications for a bugfix commit
-		
 		for(Modification modification : commit.getModifications()) {
 			if(!modification.fileNameEndsWith(".java")) continue;
-			if(modification.getType() == ModificationType.RENAME) {
+			/*if(modification.getType() == ModificationType.RENAME) {
 				repository.rename(modification);
-			}
+			}*/
 
-			SZZFile file = repository.saveOrGet(modification);
+			SZZFile file = repository.get(modification);
+			if(file == null) continue;
+
+
 			
 			// check if bug fix commit
 			// TODO link to issue things from BiCo
@@ -46,17 +47,16 @@ public class SZZProcessor implements CommitVisitor {
 			if(bugfix) {
 				SZZCommit szzC = new SZZCommit(commit, modification);
 				
-				
+				/*
 				List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
 				Iterator<BlamedLine> it = blames.iterator();
 				while(it.hasNext()) {
 					BlamedLine l = it.next();
-					if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
+					if(l.getLine().matches("^( *)([*]+|[//]|[*\/])+(.*)$")) it.remove();
 					if(l.getLine().length() == 0) it.remove();
 					if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
 				}
-				
-				System.out.println("asd");
+				*/
 				
 				file.addBugfixCommit(szzC);
 			}

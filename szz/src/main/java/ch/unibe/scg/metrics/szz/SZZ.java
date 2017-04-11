@@ -94,6 +94,10 @@ public class SZZ {
 		study = new SZZStudy(repository, range, threads);
 		
 		new RepoDriller().start(study);
+		
+		SZZStudy2 study2;
+		study2 = new SZZStudy2(repository, range, threads, study.getRepositoryInfo());
+		
 		return study.getRepositoryInfo();
 	}
 

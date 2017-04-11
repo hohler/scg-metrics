@@ -11,28 +11,27 @@ import org.repodriller.scm.SCMRepository;
 
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
-public class SZZStudy implements Study {
+public class SZZStudy2 implements Study {
 
 	private SCMRepository repository;
 	private CommitRange range;
 	private int threads;
 	private SZZRepository repoInfo;
 	
-	public SZZStudy(SCMRepository repository, CommitRange range, int threads) {
+	public SZZStudy2(SCMRepository repository, CommitRange range, int threads, SZZRepository repoInfo) {
 		this.repository = repository;
 		this.range = range;
 		this.threads = threads;
+		this.repoInfo = repoInfo;
 	}
 	
 	public void execute() {
-		
-		repoInfo = new SZZRepository();
 
 		new RepositoryMining()
 		.in(repository)
 		.through(range)
 		.withThreads(threads)
-		.process(new SZZProcessor(repoInfo))
+		.process(new SZZProcessor2(repoInfo))
 		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
 		.mine();
 	}
