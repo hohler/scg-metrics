@@ -2,8 +2,11 @@ package ch.unibe.scg.metrics.szz.domain;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -25,14 +28,14 @@ public class SZZFile {
 	private Calendar firstCommit;
 	private Calendar lastCommit;
 	
-	private List<SZZCommit> commits;
+	private Map<String, SZZCommit> commits;
 	
 	// private Logger logger = Logger.getLogger(CMFile.class);
 
 	public SZZFile(String file) {
 		this.file = file;
 		this.authors = new HashSet<>();
-		this.commits = new ArrayList<>();
+		this.commits = new LinkedHashMap<>();
 	}
 	
 	public void update(Commit commit, Modification modification) {
@@ -48,9 +51,9 @@ public class SZZFile {
 	}
 	
 	// TODO
-	public void addBugfixCommit(SZZCommit szzC) {
-		this.commits.add(szzC);
-	}
+	/*public void addBugfixCommit(SZZCommit szzC) {
+		this.commits.put(szzC.getHash(), szzC);
+	}*/
 
 	private void firstAndLastDates(Commit commit, Modification modification) {
 		if(modification.getType() != ModificationType.DELETE) {
@@ -159,6 +162,28 @@ public class SZZFile {
 
 	public void rename(String newPath) {
 		this.file = newPath;
+	}
+	
+	public SZZCommit saveOrGetCommit(Commit commit, Modification modification) {
+		String hash = commit.getHash();
+		
+		if(!commits.containsKey(hash)) {
+			commits.put(hash, new SZZCommit(commit, modification));
+		}
+		
+		return commits.get(hash);
+	}
+	
+	/*public void addCommit(SZZCommit commit) {
+		commits.put(commit.getHash(), commit);
+	}*/
+	
+	public SZZCommit getCommit(String hash) {
+		return commits.get(hash);
+	}
+	
+	public Collection<SZZCommit> getCommits() {
+		return commits.values();
 	}
 	
 	public String toString() {

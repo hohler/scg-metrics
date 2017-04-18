@@ -4,6 +4,8 @@ import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
 
+import ch.unibe.scg.metrics.szz.domain.SZZCommit;
+import ch.unibe.scg.metrics.szz.domain.SZZFile;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 
@@ -16,7 +18,8 @@ static Logger logger = Logger.getLogger(App.class);
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.szz" );
         
-        String path = "C:\\eclipse\\target\\repositories\\flume";
+        //String path = "C:\\eclipse\\target\\repositories\\flume";
+        String path = "src/main/resources/szz_testrepo";
         SZZ szz = new SZZ(Paths.get(path));
         
         /*szz.setRange("188c3104ab6030c40d652595a2274527a4ad4105", "73d87444013a656f763feb38ce20c43670dc6230");
@@ -43,6 +46,12 @@ static Logger logger = Logger.getLogger(App.class);
         }*/
         
         SZZRepository repo = szz.analyze();
+        
+        for(SZZFile f : repo.all()) {
+        	for(SZZCommit c : f.getCommits()) {
+        		System.out.println(c);	
+        	}
+        }
         
         //logger.debug(repo.all());
        

@@ -4,9 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.repodriller.domain.ChangeSet;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 import org.repodriller.domain.ModificationType;
+import org.repodriller.filter.range.CommitRange;
+import org.repodriller.filter.range.Commits;
 import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.BlamedLine;
 import org.repodriller.scm.CommitVisitor;
@@ -32,37 +35,61 @@ public class SZZProcessor2 implements CommitVisitor {
 				repository.rename(modification);
 			}*/
 
-			SZZFile file = repository.get(modification);
-			if(file == null) continue;
+			SZZFile file = repository.getFile(modification);
+			if(file == null) return;
 
-
+			SZZCommit szzC = file.getCommit(commit.getHash());
+			if(szzC == null) return;
 			
-			// check if bug fix commit
-			// TODO link to issue things from BiCo
-			String msg = commit.getMsg();
-			boolean bugfix = false;
-			if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfix = true;
-			else if(msg.contains("bug")) bugfix = true;
+			if(!szzC.isBugfix()) return;
 			
-			if(bugfix) {
-				SZZCommit szzC = new SZZCommit(commit, modification);
-				
-				/*
-				List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
-				Iterator<BlamedLine> it = blames.iterator();
-				while(it.hasNext()) {
-					BlamedLine l = it.next();
-					if(l.getLine().matches("^( *)([*]+|[//]|[*\/])+(.*)$")) it.remove();
-					if(l.getLine().length() == 0) it.remove();
-					if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
+			// Get lines that have been changed here
+			
+			
+			List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
+			Iterator<BlamedLine> it = blames.iterator();
+			while(it.hasNext()) {
+				BlamedLine l = it.next();
+				if(!l.getCommit().equals(commit.getHash())) {
+					it.remove();
 				}
-				*/
-				
-				file.addBugfixCommit(szzC);
+				//if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
+				//if(l.getLine().length() == 0) it.remove();
+				//if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
 			}
 			
-			//file.addCommit(commit, modification);
-			file.update(commit, modification);
+			
+			List<BlamedLine> blames2 = repo.getScm().blame(modification.getFileName(), commit.getHash(), true);
+			Iterator<BlamedLine> it2 = blames2.iterator();
+			while(it2.hasNext()) {
+				BlamedLine l = it2.next();
+				boolean exists = blames.stream().anyMatch(e -> e.getLineNumber() == l.getLineNumber());
+				if(!exists) it2.remove();
+			}
+			
+			it2 = blames2.iterator();
+			while(it2.hasNext()) {
+				BlamedLine l = it2.next();
+				
+				CommitRange cr = Commits.range(l.getCommit(), commit.getHash());
+				List<ChangeSet> sets = cr.get(repo.getScm());
+				
+				for(ChangeSet s : sets) {
+					if(s.getId().equals(commit.getHash())) continue;
+					SZZCommit c = file.getCommit(s.getId());
+					if(c == null) continue;
+					c.increaseBugs(1);
+				}
+				
+				
+				/*SZZCommit c = file.getCommit(l.getCommit());
+				if(c == null) continue;
+				c.increaseBugs(1);*/
+			}
+			
+			// THESE ARE THE IMPORTANT LINES/COMMITS 
+			System.out.println(blames2);
+			
 		}
 	}
 

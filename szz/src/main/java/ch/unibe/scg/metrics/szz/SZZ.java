@@ -98,7 +98,9 @@ public class SZZ {
 		SZZStudy2 study2;
 		study2 = new SZZStudy2(repository, range, threads, study.getRepositoryInfo());
 		
-		return study.getRepositoryInfo();
+		new RepoDriller().start(study2);
+		
+		return study2.getRepositoryInfo();
 	}
 
 	public void generateCommitList() {

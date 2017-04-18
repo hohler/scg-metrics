@@ -35,6 +35,8 @@ public class SZZProcessor implements CommitVisitor {
 			}
 
 			SZZFile file = repository.saveOrGet(modification);
+			//SZZCommit szzC = repository.saveOrGetCommit(commit, modification);
+			SZZCommit szzC = file.saveOrGetCommit(commit, modification);
 			
 			// check if bug fix commit
 			// TODO link to issue things from BiCo
@@ -43,22 +45,24 @@ public class SZZProcessor implements CommitVisitor {
 			if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfix = true;
 			else if(msg.contains("bug")) bugfix = true;
 			
+			//file.addCommit(szzC);
+			
 			if(bugfix) {
-				SZZCommit szzC = new SZZCommit(commit, modification);
 				
+				szzC.setBugfix(true);
 				
-				List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
-				Iterator<BlamedLine> it = blames.iterator();
-				while(it.hasNext()) {
-					BlamedLine l = it.next();
-					if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
-					if(l.getLine().length() == 0) it.remove();
-					if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
-				}
+				//List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
+				//Iterator<BlamedLine> it = blames.iterator();
+				//while(it.hasNext()) {
+				//	BlamedLine l = it.next();
+				//	if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
+				//	if(l.getLine().length() == 0) it.remove();
+				//	if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
+				//}
 				
 				System.out.println("asd");
-				
-				file.addBugfixCommit(szzC);
+			
+				//file.addBugfixCommit(szzC);
 			}
 			
 			//file.addCommit(commit, modification);
