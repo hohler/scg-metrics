@@ -146,6 +146,7 @@ public class ChangeMetrics {
 	/**
 	 * for each commit get a range that is from the commit to x weeks back
 	 * @param weeksBack
+	 * @return Map with CommitHash mapped to CommitRange
 	 */
 	public Map<String, CommitRange> generateCommitListWithWeeks(int weeksBack) {
 		Map<String, CommitRange> results = new LinkedHashMap<>();

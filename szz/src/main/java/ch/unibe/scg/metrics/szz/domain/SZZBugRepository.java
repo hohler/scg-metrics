@@ -5,7 +5,7 @@ import java.util.Set;
 
 /**
  * used for external services that can provide their information about commits (from issue trackers, etc.)
- * Set<String> automatically removes duplicates
+ * Set automatically removes duplicates
  */
 public class SZZBugRepository {
 
