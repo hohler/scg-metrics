@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.repodriller.domain.ChangeSet;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
@@ -23,6 +24,8 @@ import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 public class SZZProcessor2 implements CommitVisitor {
 
 	private SZZRepository repository;
+	
+	private Logger logger = Logger.getLogger(SZZProcessor2.class);
 	
 	public SZZProcessor2(SZZRepository repository) {
 		this.repository = repository;
@@ -88,7 +91,7 @@ public class SZZProcessor2 implements CommitVisitor {
 			}
 			
 			// THESE ARE THE IMPORTANT LINES/COMMITS 
-			System.out.println(blames2);
+			logger.debug(blames2);
 			
 		}
 	}

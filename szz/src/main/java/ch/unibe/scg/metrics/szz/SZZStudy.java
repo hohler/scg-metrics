@@ -9,6 +9,7 @@ import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.scm.SCMRepository;
 
+import ch.unibe.scg.metrics.szz.domain.SZZBugRepository;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 public class SZZStudy implements Study {
@@ -17,6 +18,7 @@ public class SZZStudy implements Study {
 	private CommitRange range;
 	private int threads;
 	private SZZRepository repoInfo;
+	private SZZBugRepository bugRepository;
 	
 	public SZZStudy(SCMRepository repository, CommitRange range, int threads) {
 		this.repository = repository;
@@ -32,13 +34,17 @@ public class SZZStudy implements Study {
 		.in(repository)
 		.through(range)
 		.withThreads(threads)
-		.process(new SZZProcessor(repoInfo))
+		.process(new SZZProcessor(repoInfo, bugRepository))
 		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
 		.mine();
 	}
 	
 	public SZZRepository getRepositoryInfo() {
 		return repoInfo;
+	}
+	
+	public void setBugRepository(SZZBugRepository repo) {
+		this.bugRepository = repo;
 	}
 
 }

@@ -1,9 +1,12 @@
 package ch.unibe.scg.metrics.szz;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 
+import ch.unibe.scg.metrics.szz.domain.SZZBugRepository;
 import ch.unibe.scg.metrics.szz.domain.SZZCommit;
 import ch.unibe.scg.metrics.szz.domain.SZZFile;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
@@ -44,6 +47,19 @@ static Logger logger = Logger.getLogger(App.class);
         	 String outputPath = Paths.get("").toAbsolutePath().toString();
              exporter.toCSV(outputPath + "/export_"+ref+".csv");
         }*/
+        
+        SZZBugRepository bugRepo = new SZZBugRepository();
+        
+        String[] commits = {
+	        "96a4c30f29e1e66f9a5351ec1130eda6789ea7c9",
+	        //"a6726ddd15cd048cec1765500675e2aa9a5432d2",
+	        "b2928f282707e5af03a91ff7cc237496223799ee",
+	        //"34e52bafc4c91abf45b75f8c688058e23f956740"
+        };
+        
+        bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
+        
+        szz.setBugRepository(bugRepo);
         
         SZZRepository repo = szz.analyze();
         

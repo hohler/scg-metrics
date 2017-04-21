@@ -14,6 +14,7 @@ import org.repodriller.scm.GitRemoteRepository;
 import org.repodriller.scm.GitRepository;
 import org.repodriller.scm.SCMRepository;
 
+import ch.unibe.scg.metrics.szz.domain.SZZBugRepository;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 public class SZZ {
@@ -23,6 +24,8 @@ public class SZZ {
 	private int everyNthCommit = 1;
 	private String firstRef;
 	private List<String> commitList;
+	
+	private SZZBugRepository bugRepository;
 	
 	private Logger logger = Logger.getLogger(SZZ.class);
 	
@@ -84,6 +87,7 @@ public class SZZ {
 	public SZZRepository analyze(List<String> commits) {
 		SZZStudy study;
 		study = new SZZStudy(repository, Commits.list(commits), threads);
+		study.setBugRepository(bugRepository);
 		
 		new RepoDriller().start(study);
 		return study.getRepositoryInfo();
@@ -92,6 +96,7 @@ public class SZZ {
 	public SZZRepository analyze() {
 		SZZStudy study;
 		study = new SZZStudy(repository, range, threads);
+		study.setBugRepository(bugRepository);
 		
 		new RepoDriller().start(study);
 		
@@ -133,5 +138,13 @@ public class SZZ {
 		}
 		
 		commitList = results;
+	}
+
+	public SZZBugRepository getBugRepository() {
+		return bugRepository;
+	}
+
+	public void setBugRepository(SZZBugRepository bugRepository) {
+		this.bugRepository = bugRepository;
 	}
 }
