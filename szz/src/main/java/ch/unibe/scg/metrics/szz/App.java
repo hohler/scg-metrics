@@ -21,8 +21,8 @@ static Logger logger = Logger.getLogger(App.class);
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.szz" );
         
-        //String path = "C:\\eclipse\\target\\repositories\\flume";
-        String path = "src/main/resources/szz_testrepo";
+        String path = "C:\\eclipse\\target\\repositories\\flume";
+        //String path = "src/main/resources/szz_testrepo";
         SZZ szz = new SZZ(Paths.get(path));
         
         /*szz.setRange("188c3104ab6030c40d652595a2274527a4ad4105", "73d87444013a656f763feb38ce20c43670dc6230");
@@ -48,6 +48,8 @@ static Logger logger = Logger.getLogger(App.class);
              exporter.toCSV(outputPath + "/export_"+ref+".csv");
         }*/
         
+        szz.setThreads(40);
+        
         SZZBugRepository bugRepo = new SZZBugRepository();
         
         String[] commits = {
@@ -59,7 +61,7 @@ static Logger logger = Logger.getLogger(App.class);
         
         bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
         
-        szz.setBugRepository(bugRepo);
+        //szz.setBugRepository(bugRepo);
         
         SZZRepository repo = szz.analyze();
         

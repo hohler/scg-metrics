@@ -1,5 +1,6 @@
 package ch.unibe.scg.metrics.szz;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -62,36 +63,38 @@ public class SZZProcessor2 implements CommitVisitor {
 			}
 			
 			
-			List<BlamedLine> blames2 = repo.getScm().blame(modification.getFileName(), commit.getHash(), true);
-			Iterator<BlamedLine> it2 = blames2.iterator();
-			while(it2.hasNext()) {
-				BlamedLine l = it2.next();
-				boolean exists = blames.stream().anyMatch(e -> e.getLineNumber() == l.getLineNumber());
-				if(!exists) it2.remove();
-			}
-			
-			it2 = blames2.iterator();
-			while(it2.hasNext()) {
-				BlamedLine l = it2.next();
+			try {
+				List<BlamedLine> blames2 = repo.getScm().blame(modification.getFileName(), commit.getHash(), true);
 				
-				CommitRange cr = Commits.range(l.getCommit(), commit.getHash());
-				List<ChangeSet> sets = cr.get(repo.getScm());
-				
-				for(ChangeSet s : sets) {
-					if(s.getId().equals(commit.getHash())) continue;
-					SZZCommit c = file.getCommit(s.getId());
-					if(c == null) continue;
-					c.increaseBugs(1);
+				Iterator<BlamedLine> it2 = blames2.iterator();
+				while(it2.hasNext()) {
+					BlamedLine l = it2.next();
+					boolean exists = blames.stream().anyMatch(e -> e.getLineNumber() == l.getLineNumber());
+					if(!exists) it2.remove();
 				}
 				
-				
-				/*SZZCommit c = file.getCommit(l.getCommit());
-				if(c == null) continue;
-				c.increaseBugs(1);*/
-			}
+				it2 = blames2.iterator();
+				List<String> alreadyIncreasedCommits = new ArrayList<>();
+				while(it2.hasNext()) {
+					BlamedLine l = it2.next();
+					
+					CommitRange cr = Commits.range(l.getCommit(), commit.getHash());
+					List<ChangeSet> sets = cr.get(repo.getScm());
+					
+					for(ChangeSet s : sets) {
+						if(s.getId().equals(commit.getHash())) continue; // introduced in current commit
+						if(alreadyIncreasedCommits.contains(s.getId())) continue; // commit was already increased
+						SZZCommit c = file.getCommit(s.getId());
+						if(c == null) continue; // file is not present in the changeset s
+						c.increaseBugs(1);
+						alreadyIncreasedCommits.add(c.getHash());
+					}	
+				}
+				logger.debug(blames2);
+			} catch(RuntimeException e) {}
+			
 			
 			// THESE ARE THE IMPORTANT LINES/COMMITS 
-			logger.debug(blames2);
 			
 		}
 	}
