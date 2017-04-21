@@ -18,6 +18,7 @@ import org.repodriller.scm.GitRepository;
 import org.repodriller.scm.SCM;
 import org.repodriller.scm.SCMRepository;
 
+import ch.unibe.scg.metrics.changemetrics.domain.CMBugRepository;
 import ch.unibe.scg.metrics.changemetrics.domain.CMRepository;
 
 public class ChangeMetrics {
@@ -28,6 +29,8 @@ public class ChangeMetrics {
 	private int everyNthCommit = 1;
 	private String firstRef;
 	private List<String> commitList;
+	
+	private CMBugRepository bugRepository;
 	
 	private Logger logger = Logger.getLogger(ChangeMetrics.class);
 	
@@ -93,6 +96,7 @@ public class ChangeMetrics {
 	public CMRepository analyze(List<String> commits) {
 		ChangeMetricsStudy study;
 		study = new ChangeMetricsStudy(repository, Commits.list(commits), threads);
+		study.setBugRepository(this.bugRepository);
 		
 		new RepoDriller().start(study);
 		return study.getRepositoryInfo();
@@ -101,6 +105,7 @@ public class ChangeMetrics {
 	public CMRepository analyze() {
 		ChangeMetricsStudy study;		
 		study = new ChangeMetricsStudy(repository, range, threads);
+		study.setBugRepository(this.bugRepository);
 		
 		new RepoDriller().start(study);
 		return study.getRepositoryInfo();
@@ -156,7 +161,7 @@ public class ChangeMetrics {
 				
 				Calendar end = Calendar.getInstance();
 				end.setTimeInMillis(c.getDate().getTimeInMillis());
-				end.add(Calendar.SECOND, -10); // So that this commit will be in range
+				end.add(Calendar.SECOND, 10); // So that this commit will be in range
 				
 				Calendar start = Calendar.getInstance();
 				start.setTimeInMillis(c.getDate().getTimeInMillis());
@@ -183,4 +188,8 @@ public class ChangeMetrics {
 		
 		return start;
 	}*/
+	
+	public void setBugRepository(CMBugRepository bugRepo) {
+		this.bugRepository = bugRepo;
+	}
 }

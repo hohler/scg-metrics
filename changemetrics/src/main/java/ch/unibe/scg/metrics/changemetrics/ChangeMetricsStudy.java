@@ -9,6 +9,7 @@ import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.scm.SCMRepository;
 
+import ch.unibe.scg.metrics.changemetrics.domain.CMBugRepository;
 import ch.unibe.scg.metrics.changemetrics.domain.CMRepository;
 
 public class ChangeMetricsStudy implements Study {
@@ -17,6 +18,7 @@ public class ChangeMetricsStudy implements Study {
 	private CommitRange range;
 	private CMRepository repoInfo;
 	private int threads;
+	private CMBugRepository bugRepository;
 	
 	public ChangeMetricsStudy(SCMRepository repository, CommitRange range, int threads) {
 		this.repository = repository;
@@ -32,7 +34,7 @@ public class ChangeMetricsStudy implements Study {
 		.in(repository)
 		.through(range)
 		.withThreads(threads)
-		.process(new ChangeMetricsProcessor(repoInfo))
+		.process(new ChangeMetricsProcessor(repoInfo, bugRepository))
 		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
 		.mine();
 
@@ -40,6 +42,10 @@ public class ChangeMetricsStudy implements Study {
 	
 	public CMRepository getRepositoryInfo() {
 		return this.repoInfo;
+	}
+	
+	public void setBugRepository(CMBugRepository bugRepo) {
+		this.bugRepository = bugRepo;
 	}
 
 }

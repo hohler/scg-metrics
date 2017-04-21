@@ -7,14 +7,22 @@ import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.CommitVisitor;
 import org.repodriller.scm.SCMRepository;
 
+import ch.unibe.scg.metrics.changemetrics.domain.CMBugRepository;
 import ch.unibe.scg.metrics.changemetrics.domain.CMFile;
 import ch.unibe.scg.metrics.changemetrics.domain.CMRepository;
 
 public class ChangeMetricsProcessor implements CommitVisitor {
 
 	private CMRepository repository;
+	private CMBugRepository bugRepository;
+	
 	public ChangeMetricsProcessor(CMRepository repository) {
 		this.repository = repository;
+	}
+	
+	public ChangeMetricsProcessor(CMRepository repository, CMBugRepository bugRepository) {
+		this.repository = repository;
+		this.bugRepository = bugRepository;
 	}
 	
 	public void process(SCMRepository repo, Commit commit, PersistenceMechanism writer) {
@@ -25,7 +33,7 @@ public class ChangeMetricsProcessor implements CommitVisitor {
 			}
 
 			CMFile file = repository.saveOrGet(modification);
-			file.update(commit, modification);
+			file.update(commit, modification, bugRepository);
 		}
 	}
 

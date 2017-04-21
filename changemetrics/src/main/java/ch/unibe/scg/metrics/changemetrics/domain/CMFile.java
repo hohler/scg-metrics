@@ -41,12 +41,12 @@ public class CMFile {
 		this.weightedAgeRecords = new HashMap<>();
 	}
 	
-	public void update(Commit commit, Modification modification) {
+	public void update(Commit commit, Modification modification, CMBugRepository bugRepository) {
 		String msg = commit.getMsg().toLowerCase();
 
 		countRevision(modification);
 		countRefactoring(msg);
-		countBugFixes(msg);
+		countBugFixes(msg, commit.getHash(), bugRepository);
 		addAuthor(commit.getAuthor());
 		countLocAddedAndRemoved(modification);
 		countCodeChurn(modification);
@@ -101,9 +101,16 @@ public class CMFile {
 	}
 
 	// TODO: make regex and remove post/prefix
-	private void countBugFixes(String msg) {
-		if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfixes++;
-		else if(msg.contains("bug")) bugfixes++;
+	private void countBugFixes(String msg, String hash, CMBugRepository bugRepository) {
+		if(bugRepository == null) {
+			if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfixes++;
+			else if(msg.contains("bug")) bugfixes++;
+		} else {
+			if(bugRepository.isBugfixCommit(hash)) {
+				bugfixes++;
+				System.err.println(hash + " is a bugfix");
+			}
+		}
 	}
 
 	private void countRevision(Modification modification) {
