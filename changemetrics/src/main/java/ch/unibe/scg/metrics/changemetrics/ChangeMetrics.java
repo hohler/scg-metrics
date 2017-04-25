@@ -145,7 +145,7 @@ public class ChangeMetrics {
 	
 	/**
 	 * for each commit get a range that is from the commit to x weeks back
-	 * @param weeksBack
+	 * @param weeksBack (if 999999: this means it should go to the very beginning of the project (2005, git release))
 	 * @return Map with CommitHash mapped to CommitRange
 	 */
 	public Map<String, CommitRange> generateCommitListWithWeeks(int weeksBack) {
@@ -166,7 +166,11 @@ public class ChangeMetrics {
 				
 				Calendar start = Calendar.getInstance();
 				start.setTimeInMillis(c.getDate().getTimeInMillis());
-				start.add(Calendar.WEEK_OF_YEAR, -weeksBack);
+				if(weeksBack == 999999) {
+					start.set(Calendar.YEAR, 2005); // release of first git version
+				} else {
+					start.add(Calendar.WEEK_OF_YEAR, -weeksBack);
+				}
 				start.add(Calendar.SECOND, -10);
 
 				CommitRange range = Commits.betweenDates(start,  end);
