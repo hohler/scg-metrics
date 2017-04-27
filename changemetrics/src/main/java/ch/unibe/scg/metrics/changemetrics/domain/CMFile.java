@@ -108,7 +108,6 @@ public class CMFile {
 		} else {
 			if(bugRepository.isBugfixCommit(hash)) {
 				bugfixes++;
-				System.err.println(hash + " is a bugfix");
 			}
 		}
 	}

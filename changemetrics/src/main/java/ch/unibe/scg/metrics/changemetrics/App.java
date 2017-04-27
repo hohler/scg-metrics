@@ -21,8 +21,8 @@ public class App
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.changemetrics" );
         
-        //String path = "C:\\eclipse\\target\\repositories\\flume";
-        String path = "src/main/resources/cm_testrepo";
+        String path = "C:\\eclipse\\target\\repositories\\flume";
+        //String path = "src/main/resources/cm_testrepo";
         ChangeMetrics cm = new ChangeMetrics(Paths.get(path));
         
         //cm.setRange("188c3104ab6030c40d652595a2274527a4ad4105", "73d87444013a656f763feb38ce20c43670dc6230");
@@ -34,11 +34,16 @@ public class App
         
         CMBugRepository bugRepo = new CMBugRepository();
         
+        // flume
         String[] commits = {
-	        "96a4c30f29e1e66f9a5351ec1130eda6789ea7c9",
-	        //"a6726ddd15cd048cec1765500675e2aa9a5432d2",
-	        "b2928f282707e5af03a91ff7cc237496223799ee",
-	        //"34e52bafc4c91abf45b75f8c688058e23f956740"
+	        "791f443fae173054cf29ac52fee8e9cf7fe70dc7",
+	        "2e1b7c23c4964b8860b876cc5c8c3642c4d74ab9",
+	        "ba0b2685b96747a60a3e318b1e2fc2c9c02bcea4",
+	        "fa1ee05af38bcf08ed18ff36d4284e68836a9054",
+	        "eb7eab6593e241d9f67308298871f5586734b657",
+	        "a085eb653768cbde4f89f9182c31ebc2074bca72",
+	        "d20c94ca61103632de2cd941a716dbd4d9c6d719",
+	        "aad551d3f45687193ef3323ba6a4584c15c6ad53"
         };
         
         bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
