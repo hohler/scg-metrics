@@ -4,17 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 
 public class SZZRepository {
 
 	private Map<String, SZZFile> files;
-	private Map<String, SZZCommit> commits;
 	
 	public SZZRepository() {
 		files = new HashMap<>();
-		commits = new HashMap<>();
 	}
 	
 	
@@ -34,20 +31,6 @@ public class SZZRepository {
 		return files.get(m.getNewPath());
 	}
 	
-	public SZZCommit saveOrGetCommit(Commit c, Modification m) {
-			String hash = c.getHash();
-		
-		if(!commits.containsKey(hash)) {
-			commits.put(hash, new SZZCommit(c, m));
-		}
-		
-		return commits.get(hash);
-	}
-	
-	public SZZCommit getCommit(String hash) {
-		return commits.get(hash);
-	}
-
 	public void rename(Modification m) {
 		String oldPath = m.getOldPath();
 		String newPath = m.getNewPath();
@@ -55,8 +38,23 @@ public class SZZRepository {
 		SZZFile file = files.remove(oldPath);
 		
 		if(file != null) {
-			file.rename(newPath);
-			files.put(newPath, file);
+			if(!files.containsKey(newPath)) {
+				file.rename(newPath);
+				files.put(newPath, file);
+			} else {
+				
+				// transfer bug count in commits of old file to new file
+				SZZFile sameFile = files.get(newPath);
+				
+				for(SZZCommit c : file.getCommits()) {
+					for(SZZCommit sc : sameFile.getCommits()) {
+						if(c.getHash().equals(sc.getHash())) {
+							sc.increaseBugs(c.getBugs());
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 

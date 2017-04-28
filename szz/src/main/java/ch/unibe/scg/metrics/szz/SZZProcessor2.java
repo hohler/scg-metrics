@@ -3,7 +3,6 @@ package ch.unibe.scg.metrics.szz;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.repodriller.domain.ChangeSet;
@@ -35,9 +34,9 @@ public class SZZProcessor2 implements CommitVisitor {
 	public void process(SCMRepository repo, Commit commit, PersistenceMechanism writer) {
 		for(Modification modification : commit.getModifications()) {
 			if(!modification.fileNameEndsWith(".java")) continue;
-			/*if(modification.getType() == ModificationType.RENAME) {
+			if(modification.getType() == ModificationType.RENAME) {
 				repository.rename(modification);
-			}*/
+			}
 
 			SZZFile file = repository.getFile(modification);
 			if(file == null) return;
