@@ -191,7 +191,7 @@ public class SMFile {
 	}
 
 	public String toString() {
-		return "SZZFile ["+file+", cbo: "+cbo+", dit: "+dit+", noc: " + noc + ", nof: " + nof + ", nopf: " + nopf + ", nosf: " + nosf + ", nom: " + nom + ", nopm: " + nopm + ", nosm: " + nosm
+		return "SMFile ["+file+", cbo: "+cbo+", dit: "+dit+", noc: " + noc + ", nof: " + nof + ", nopf: " + nopf + ", nosf: " + nosf + ", nom: " + nom + ", nopm: " + nopm + ", nosm: " + nosm
 				+ ", nosi: " + nosi + ", rfc: " + rfc + ", wmc: " + wmc + ", loc: " + loc + ", lcom: " + lcom;
 	}
 }

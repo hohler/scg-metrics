@@ -60,6 +60,6 @@ public class SMCommit {
 	}
 
 	public String toString() {
-		return "[SZZCommit] Hash: "+hash+" Msg: "+msg;
+		return "[SMCommit] Hash: "+hash+" Msg: "+msg;
 	}
 }

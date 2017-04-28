@@ -117,7 +117,7 @@ public class SourceMetrics {
 		firstRef = changeSets.get(changeSets.size()-1).getId();
 		
 		for(ChangeSet cs : changeSets) {
-			if(counter % everyNthCommit == 0 && counter != 0) {
+			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0) {
 				results.add(cs.getId());
 			}
 			counter++;

@@ -18,7 +18,7 @@ static Logger logger = Logger.getLogger(App.class);
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.sourcemetrics" );
         
-        String path = "C:\\eclipse\\target\\repositories\\flume_OLD";
+        String path = "C:\\eclipse\\target\\repositories\\flume";
         //String path = "src/main/resources/szz_testrepo";
         SourceMetrics sm = new SourceMetrics(Paths.get(path));
         
