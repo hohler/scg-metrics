@@ -23,6 +23,8 @@ import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 public class SZZProcessor2 implements CommitVisitor {
 
+	private static final int MAX_MODIFICATIONS = 10;
+	
 	private SZZRepository repository;
 	
 	private Logger logger = Logger.getLogger(SZZProcessor2.class);
@@ -39,12 +41,20 @@ public class SZZProcessor2 implements CommitVisitor {
 			}
 
 			SZZFile file = repository.getFile(modification);
-			if(file == null) return;
+			if(file == null) continue;
 
 			SZZCommit szzC = file.getCommit(commit.getHash());
-			if(szzC == null) return;
+			if(szzC == null) continue;
 			
-			if(!szzC.isBugfix()) return;
+			if(modification.getType() == ModificationType.DELETE) {
+				szzC.setDeleted(true);
+			}
+			
+			if(!szzC.isBugfix()) continue;
+			
+			
+			
+			if(commit.getModifications().size() > MAX_MODIFICATIONS) continue; // to much modifications for a bugfix commit
 			
 			// Get lines that have been changed here
 			

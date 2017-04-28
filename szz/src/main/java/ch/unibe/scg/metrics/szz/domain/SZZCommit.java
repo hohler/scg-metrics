@@ -10,6 +10,7 @@ public class SZZCommit {
 	private String diff;
 	private int bugs;
 	private boolean bugfix;
+	private boolean deleted;
 	
 	public SZZCommit() {
 		
@@ -74,7 +75,15 @@ public class SZZCommit {
 	public void setBugfix(boolean bugfix) {
 		this.bugfix = bugfix;
 	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
 
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+	
 	public String toString() {
 		return "[SZZCommit] Hash: "+hash+" Msg: "+msg+" Bugs: " + bugs;
 	}

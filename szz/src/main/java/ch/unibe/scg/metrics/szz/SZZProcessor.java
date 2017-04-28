@@ -15,7 +15,7 @@ import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 public class SZZProcessor implements CommitVisitor {
 
-	private static final int MAX_MODIFICATIONS = 10;
+	// private static final int MAX_MODIFICATIONS = 10;
 	
 	private SZZRepository repository;
 	private SZZBugRepository bugRepository;
@@ -29,16 +29,20 @@ public class SZZProcessor implements CommitVisitor {
 	}
 	
 	public void process(SCMRepository repo, Commit commit, PersistenceMechanism writer) {
-		if(commit.getModifications().size() > MAX_MODIFICATIONS) return; // to much modifications for a bugfix commit
+		//if(commit.getModifications().size() > MAX_MODIFICATIONS) return; // to much modifications for a bugfix commit
 		
 		for(Modification modification : commit.getModifications()) {
 			if(!modification.fileNameEndsWith(".java")) continue;
 			if(modification.getType() == ModificationType.RENAME) {
 				repository.rename(modification);
 			}
-
+			
 			SZZFile file = repository.saveOrGet(modification);
 			SZZCommit szzC = file.saveOrGetCommit(commit, modification);
+			
+			if(modification.getType() == ModificationType.DELETE) {
+				szzC.setDeleted(true);
+			}
 			
 			// check if bug fix commit
 			boolean bugfix = false;

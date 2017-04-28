@@ -10,17 +10,17 @@
     </appender>
     
     <category name="org.repodriller">
-        <priority value="INFO"/>
+        <priority value="WARN"/>
         <appender-ref ref="main"/>
     </category>
 
     <category name="/">
-        <priority value="INFO"/>
+        <priority value="WARN"/>
         <appender-ref ref="main"/>
     </category>
     
     <category name="ch.unibe.scg.metrics.szz">
-        <priority value="DEBUG"/>
+        <priority value="WARN"/>
         <appender-ref ref="main"/>
     </category>
 
