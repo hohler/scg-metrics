@@ -53,8 +53,6 @@ public class SZZProcessor implements CommitVisitor {
 
 			
 			szzC.setBugfix(bugfix);
-
-			file.update(commit, modification);
 		}
 	}
 
