@@ -29,25 +29,6 @@ static Logger logger = Logger.getLogger(App.class);
         szz.setEveryNthCommit(10);
         szz.generateCommitList();*/
         
-        //String firstRef = cm.getFirstRef();
-        
-        //logger.debug("first commit (should be 188c3104ab6030c40d652595a2274527a4ad4105): "+cm.getFirstRef());
-        
-        
-        
-        //List<String> commits = cm.getCommitList();
-        
-        /*for(String ref : commits) {
-        	cm.setRange(firstRef, ref);
-        	CMRepository repo = cm.analyze();
-        	
-        	logger.debug(repo.all());
-        	
-        	 ChangeMetricsExporter exporter = new ChangeMetricsExporter(repo);
-        	 String outputPath = Paths.get("").toAbsolutePath().toString();
-             exporter.toCSV(outputPath + "/export_"+ref+".csv");
-        }*/
-        
         szz.setThreads(40);
         
         SZZBugRepository bugRepo = new SZZBugRepository();

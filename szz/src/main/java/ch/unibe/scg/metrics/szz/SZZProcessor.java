@@ -41,7 +41,6 @@ public class SZZProcessor implements CommitVisitor {
 			SZZCommit szzC = file.saveOrGetCommit(commit, modification);
 			
 			// check if bug fix commit
-			// TODO link to issue things from BiCo
 			boolean bugfix = false;
 			if(bugRepository == null) {
 				String msg = commit.getMsg();	
