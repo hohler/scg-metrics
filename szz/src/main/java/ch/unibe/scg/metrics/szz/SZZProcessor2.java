@@ -91,10 +91,6 @@ public class SZZProcessor2 implements CommitVisitor {
 				}
 				logger.debug(blames2);
 			} catch(RuntimeException e) {}
-			
-			
-			// THESE ARE THE IMPORTANT LINES/COMMITS 
-			
 		}
 	}
 
