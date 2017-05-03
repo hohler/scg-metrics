@@ -15,7 +15,7 @@ public class CMRepository {
 	}
 	
 	
-	public CMFile saveOrGet(Modification m) {
+	public synchronized CMFile saveOrGet(Modification m) {
 		
 		String fileName = m.getNewPath();
 		
@@ -28,7 +28,7 @@ public class CMRepository {
 		return files.get(fileName);
 	}
 
-	public void rename(Modification m) {
+	public synchronized void rename(Modification m) {
 		String oldPath = m.getOldPath();
 		String newPath = m.getNewPath();
 		
@@ -40,7 +40,7 @@ public class CMRepository {
 		}
 	}
 
-	public Collection<CMFile> all() {
+	public synchronized Collection<CMFile> all() {
 		return files.values();
 	}
 
