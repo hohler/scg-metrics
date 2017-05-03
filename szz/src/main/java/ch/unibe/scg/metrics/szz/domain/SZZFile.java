@@ -9,7 +9,7 @@ import org.repodriller.domain.Modification;
 
 public class SZZFile {
 
-	String file;	
+	String file;
 	private Map<String, SZZCommit> commits;
 	
 	// private Logger logger = Logger.getLogger(CMFile.class);
@@ -37,6 +37,14 @@ public class SZZFile {
 		return commits.get(hash);
 	}
 	
+	public boolean addCommit(SZZCommit commit) {
+		if(!commits.containsKey(commit.getHash())) {
+			commits.put(commit.getHash(), commit);
+			return true;
+		}
+		return false;
+	}
+	
 	public SZZCommit getCommit(String hash) {
 		return commits.get(hash);
 	}
@@ -44,7 +52,7 @@ public class SZZFile {
 	public Collection<SZZCommit> getCommits() {
 		return commits.values();
 	}
-	
+
 	public String toString() {
 		return "SZZFile ["+file+", commits: "+ commits.size();
 	}
