@@ -46,7 +46,11 @@ public class SourceMetricsExporter {
 					info.getRfc(),
 					info.getWmc(),
 					info.getLoc(),
-					info.getLcom()
+					info.getLcom(),
+					info.getNocb(),
+					info.getNonc(),
+					info.getNona(),
+					info.getNomwmop()
 			);
 			
 		}
@@ -68,7 +72,11 @@ public class SourceMetricsExporter {
 				"rfc",
 				"wmc",
 				"loc",
-				"lcom"
+				"lcom",
+				"nocb",
+				"nonc",
+				"nona",
+				"nomwmop"
 		);
 	}
 }
