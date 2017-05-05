@@ -34,12 +34,12 @@
     	<version>1.7.25</version>
     </dependency>
     
+
     <dependency>
     	<groupId>com.github.mauricioaniche</groupId>
-	    <artifactId>ck</artifactId>
-	    <version>0.2.0</version>
-	</dependency>
-
+    	<artifactId>ck</artifactId>
+    	<version>0.2.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   
   <build>  	
@@ -79,4 +79,13 @@
 		</plugin>
   	</plugins>
   </build>
+  
+	<repositories>
+	  <repository>
+	    <id>data-local</id>
+	    <name>data</name>
+	    <url>file://${basedir}/local_maven_repository</url>
+	  </repository>
+
+	</repositories>
 </project>

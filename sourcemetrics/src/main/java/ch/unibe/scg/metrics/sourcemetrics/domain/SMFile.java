@@ -25,6 +25,11 @@ public class SMFile {
 	private int nosi;
 	private int loc;
 	
+	private int nocb; // number of catch blocks
+	private int nonc; // number of null checks
+	private int nona; // number of null assignments
+	private int nomwmop; // number of methods with more than 1 parameter
+	
 	// private Logger logger = Logger.getLogger(CMFile.class);
 
 	public SMFile() {}
@@ -51,6 +56,10 @@ public class SMFile {
 		nosf = ck.getNosf();
 		nosi = ck.getNosi();
 		loc = ck.getLoc();
+		nocb = ck.getNocb();
+		nonc = ck.getNonc();
+		nona = ck.getNona();
+		nomwmop = ck.getNomwmop();
 	}
 	
 	
@@ -189,9 +198,42 @@ public class SMFile {
 	public void setLoc(int loc) {
 		this.loc = loc;
 	}
+	
+
+	public int getNocb() {
+		return nocb;
+	}
+
+	public void setNocb(int nocb) {
+		this.nocb = nocb;
+	}
+
+	public int getNonc() {
+		return nonc;
+	}
+
+	public void setNonc(int nonc) {
+		this.nonc = nonc;
+	}
+
+	public int getNona() {
+		return nona;
+	}
+
+	public void setNona(int nona) {
+		this.nona = nona;
+	}
+
+	public int getNomwmop() {
+		return nomwmop;
+	}
+
+	public void setNomwmop(int nomwmop) {
+		this.nomwmop = nomwmop;
+	}
 
 	public String toString() {
 		return "SMFile ["+file+", cbo: "+cbo+", dit: "+dit+", noc: " + noc + ", nof: " + nof + ", nopf: " + nopf + ", nosf: " + nosf + ", nom: " + nom + ", nopm: " + nopm + ", nosm: " + nosm
-				+ ", nosi: " + nosi + ", rfc: " + rfc + ", wmc: " + wmc + ", loc: " + loc + ", lcom: " + lcom;
+				+ ", nosi: " + nosi + ", rfc: " + rfc + ", wmc: " + wmc + ", loc: " + loc + ", lcom: " + lcom + ", nocb: " + nocb + ", nonc: " + nonc + ", nona: " + nona + ", nomwmop: " + nomwmop;
 	}
 }
