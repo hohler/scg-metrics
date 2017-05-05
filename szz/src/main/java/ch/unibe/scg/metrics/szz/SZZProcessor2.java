@@ -56,9 +56,8 @@ public class SZZProcessor2 implements CommitVisitor {
 			
 			if(commit.getModifications().size() > MAX_MODIFICATIONS) continue; // to much modifications for a bugfix commit
 			
-			// Get lines that have been changed here
 			
-			
+			// Get lines that have been changed in THIS current commit and sort out other ones
 			List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
 			Iterator<BlamedLine> it = blames.iterator();
 			while(it.hasNext()) {
@@ -73,6 +72,10 @@ public class SZZProcessor2 implements CommitVisitor {
 			
 			
 			try {
+				
+				// get the blames before THIS current commit and match the line numbers with the changed lines in THIS current commit
+				// if the line does not exist, sort it out
+				
 				List<BlamedLine> blames2 = repo.getScm().blame(modification.getFileName(), commit.getHash(), true);
 				
 				Iterator<BlamedLine> it2 = blames2.iterator();
@@ -82,6 +85,8 @@ public class SZZProcessor2 implements CommitVisitor {
 					if(!exists) it2.remove();
 				}
 				
+				// get for each blamed line all the commits between the introducing commit of the line and THIS current commit
+				// increase bug count in all commits by one
 				it2 = blames2.iterator();
 				List<String> alreadyIncreasedCommits = new ArrayList<>();
 				while(it2.hasNext()) {
