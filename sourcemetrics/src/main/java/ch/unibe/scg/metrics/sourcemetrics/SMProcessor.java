@@ -35,9 +35,6 @@ public class SMProcessor implements CommitVisitor {
 			
 			for(CKNumber result : report.all()) {
 				SMFile f = new SMFile(result);
-				//System.out.println(repoPath);
-				//System.out.println(result.getFile());
-				//System.out.println(result.getFile().replace(repoPath, "").replace("\\", "/"));
 				f.setFile(result.getFile().replace(repoPath, "").replace("\\", "/"));
 				c.addFile(f);
 			}

@@ -1,4 +1,4 @@
-package ch.unibe.scg.metrics.szz;
+package ch.unibe.scg.metrics.sourcemetrics;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
