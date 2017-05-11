@@ -124,3 +124,7 @@ One file in the repository, containing the change metrics
 ## License
 
 This software is licensed under the Apache 2.0 License.
+
+## How to build
+
+	mvn install

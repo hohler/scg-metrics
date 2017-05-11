@@ -129,3 +129,7 @@ One file in a revision, containing the metrics
 ## License
 
 This software is licensed under the Apache 2.0 License.
+
+## How to build
+
+	mvn install

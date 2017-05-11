@@ -72,3 +72,7 @@ One commit of a file, contains the bug count of a specific revision.
 ## License
 
 This software is licensed under the Apache 2.0 License.
+
+## How to build
+
+	mvn install
