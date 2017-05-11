@@ -56,6 +56,12 @@ public class SZZProcessor2 implements CommitVisitor {
 			
 			if(commit.getModifications().size() > MAX_MODIFICATIONS) continue; // to much modifications for a bugfix commit
 			
+			// TODO improve SZZ
+			// use https://github.com/thombergs/diffparser and improve: add line numbers
+			
+			// parse modification.getDiff();
+			// look which lines were added and which lines were deleted
+			// blame the lines (we now have line numbers) in the specific commit (deleted: prior revision; added: after revision)
 			
 			// Get lines that have been changed in THIS current commit and sort out other ones
 			List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
