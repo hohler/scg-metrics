@@ -182,17 +182,6 @@ public class ChangeMetrics {
 		return results;
 	}
 	
-
-	/*public Calendar calculateFirstRefWeeks(String ref, int weeksBack) {
-		Commit c = this.repository.getScm().getCommit(ref);
-		Calendar date = c.getDate();
-		
-		Calendar start = Calendar.getInstance();
-		start.setTimeInMillis(date.getTimeInMillis());
-		start.add(Calendar.WEEK_OF_YEAR, -weeksBack);
-		
-		return start;
-	}*/
 	
 	public void setBugRepository(CMBugRepository bugRepo) {
 		this.bugRepository = bugRepo;
