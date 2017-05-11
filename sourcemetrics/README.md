@@ -68,3 +68,7 @@ One file in a revision, containing the metrics
 
 * org.repodriller.repodriller (1.2.1)
 * modified com.github.mauricioaniche.ck (https://github.com/papagei9/ck), found in "local_maven_repository" directory.
+
+## License
+
+This software is licensed under the Apache 2.0 License.
