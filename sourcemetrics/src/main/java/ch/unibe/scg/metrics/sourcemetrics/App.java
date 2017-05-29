@@ -24,7 +24,7 @@ static Logger logger = Logger.getLogger(App.class);
         SourceMetrics sm = new SourceMetrics(Paths.get(path));
         
        
-        sm.setEveryNthCommit(200); // 0: only newest commit
+        sm.setEveryNthCommit(400); // 0: only newest commit
         sm.generateCommitList();
         
         System.out.println(sm.getCommitList());

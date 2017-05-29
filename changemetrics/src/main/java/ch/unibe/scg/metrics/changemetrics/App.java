@@ -22,8 +22,8 @@ public class App
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.changemetrics" );
         
-        //String path = "C:\\eclipse\\target\\repositories\\commons-lang";
-        String path = "C:\\eclipse\\target\\repositories\\flume";
+        String path = "C:\\eclipse\\target\\repositories\\commons-lang";
+        //String path = "C:\\eclipse\\target\\repositories\\flume";
         
         //String path = "src/main/resources/cm_testrepo";
         ChangeMetrics cm = new ChangeMetrics(Paths.get(path));
@@ -32,17 +32,17 @@ public class App
         
         
         /** TEST */
-        cm.setRange("e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704", "e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704");
-        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(24);
+        //cm.setRange("d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3", "d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3");
+        //Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(4);
         
-        System.out.println(list2.values());
-        CommitRange r = list2.get("e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704");
-        System.out.println(r.get(cm.getScm()));
+        //System.out.println(list2.values());
+        //CommitRange r = list2.get("d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3");
+        //System.out.println(r.get(cm.getScm()));
         
-        System.exit(0);
+        //System.exit(0);
         
         // cm.setWeeksBack(12);
-        cm.setEveryNthCommit(200);
+        cm.setEveryNthCommit(400);
         cm.setThreads(40);
         
         
@@ -64,11 +64,11 @@ public class App
         
         //cm.setBugRepository(bugRepo);
         
-        Map<String, CommitRange> list = cm.generateCommitListWithWeeks(52);
+        Map<String, CommitRange> list = cm.generateCommitListWithWeeks(12);
         
         System.out.println(list.keySet());
         
-        System.exit(0);
+        //System.exit(0);
         
         // cm.generateCommitList();
 
