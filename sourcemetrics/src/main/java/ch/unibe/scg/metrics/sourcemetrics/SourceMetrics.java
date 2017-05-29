@@ -4,14 +4,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.repodriller.RepoDriller;
 import org.repodriller.domain.ChangeSet;
+import org.repodriller.domain.Commit;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.scm.GitRemoteRepository;
 import org.repodriller.scm.GitRepository;
+import org.repodriller.scm.SCM;
 import org.repodriller.scm.SCMRepository;
 
 import ch.unibe.scg.metrics.sourcemetrics.domain.SMRepository;
@@ -98,13 +101,19 @@ public class SourceMetrics {
 		int counter = 0;
 		List<ChangeSet> changeSets;
 		
+		SCM scm = repository.getScm();
+		
 		if(range != null) {
-			changeSets = range.get(repository.getScm());
+			changeSets = range.get(scm);
 			logger.debug("[changeSet with range!=null]:"+changeSets);
 		} else {
 			logger.debug("[Range is null]");
-			changeSets = repository.getScm().getChangeSets();
+			changeSets = scm.getChangeSets();
 		}
+		
+		/*List<ChangeSet> changeSets = changeSetsTemp.stream()
+                .filter(set -> !scm.getCommit(set.getId()).isInMainBranch())
+                .collect(Collectors.toList());*/
 		
 		if(everyNthCommit == 0) {
 			if(changeSets.size() > 0) results.add(changeSets.get(0).getId());
@@ -117,7 +126,14 @@ public class SourceMetrics {
 		firstRef = changeSets.get(changeSets.size()-1).getId();
 		
 		for(ChangeSet cs : changeSets) {
+			
 			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0) {
+				
+				String ref = cs.getId();
+				Commit c = scm.getCommit(ref);
+				
+				if(!c.isInMainBranch()) continue; // only MAIN branch!
+				
 				results.add(cs.getId());
 			}
 			counter++;

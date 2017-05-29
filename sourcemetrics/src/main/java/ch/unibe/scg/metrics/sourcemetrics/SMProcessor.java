@@ -24,14 +24,18 @@ public class SMProcessor implements CommitVisitor {
 	
 	public void process(SCMRepository repo, Commit commit, PersistenceMechanism writer) {
 		
+		SMCommit c = new SMCommit(commit);
+		repository.addCommit(c);
+		
+		System.out.println(commit.getHash());
+		
 		try {
+			repo.getScm().reset();
 			repo.getScm().checkout(commit.getHash());
 			String repoPath = repo.getPath() + "\\";
 			
 			CKReport report = new CK().calculate(repo.getPath());
 			
-			SMCommit c = new SMCommit(commit);
-			repository.addCommit(c);
 			
 			for(CKNumber result : report.all()) {
 				SMFile f = new SMFile(result);
@@ -40,6 +44,7 @@ public class SMProcessor implements CommitVisitor {
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
+			System.out.println("fail: "+commit.getHash());
 		} finally {
 			repo.getScm().reset();
 		}

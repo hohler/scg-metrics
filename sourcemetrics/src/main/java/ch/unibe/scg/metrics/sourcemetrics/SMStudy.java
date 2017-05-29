@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
+import org.repodriller.domain.ChangeSet;
 import org.repodriller.filter.commit.OnlyInMainBranch;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
 import org.repodriller.filter.range.CommitRange;
@@ -23,9 +24,7 @@ public class SMStudy implements Study {
 	}
 	
 	public void execute() {
-		
 		repoInfo = new SMRepository();
-
 		new RepositoryMining()
 		.in(repository)
 		.through(range)
