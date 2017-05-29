@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.repodriller.RepoDriller;
@@ -151,10 +152,27 @@ public class ChangeMetrics {
 	public Map<String, CommitRange> generateCommitListWithWeeks(int weeksBack) {
 		Map<String, CommitRange> results = new LinkedHashMap<>();
 		SCM scm = repository.getScm();
-		List<ChangeSet> changeSets = scm.getChangeSets();
+		List<ChangeSet> changeSets;
+		
+		if(range != null) changeSets = range.get(scm);
+		else changeSets = scm.getChangeSets();
+		
+		
+		/*List<ChangeSet> changeSets = changeSetsTemp.stream()
+                .filter(set -> !scm.getCommit(set.getId()).isInMainBranch())
+                .collect(Collectors.toList());*/
+		
+		
 		int counter = 0;
 		for(ChangeSet cs : changeSets) {
-			if(counter % everyNthCommit == 0 || everyNthCommit == 1) {
+			
+			/*String ref = cs.getId();
+			Commit c = scm.getCommit(ref);
+			
+			if(!c.isInMainBranch()) continue; // only MAIN branch!*/
+			
+			//if(counter % everyNthCommit == 0 || everyNthCommit == 1) {
+			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0 || everyNthCommit == 1) {
 				String ref = cs.getId();
 				Commit c = scm.getCommit(ref);
 				
@@ -185,5 +203,9 @@ public class ChangeMetrics {
 	
 	public void setBugRepository(CMBugRepository bugRepo) {
 		this.bugRepository = bugRepo;
+	}
+	
+	public SCM getScm() {
+		return this.repository.getScm();
 	}
 }

@@ -1,6 +1,7 @@
 package ch.unibe.scg.metrics.changemetrics;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,14 +22,27 @@ public class App
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.changemetrics" );
         
+        //String path = "C:\\eclipse\\target\\repositories\\commons-lang";
         String path = "C:\\eclipse\\target\\repositories\\flume";
+        
         //String path = "src/main/resources/cm_testrepo";
         ChangeMetrics cm = new ChangeMetrics(Paths.get(path));
         
         //cm.setRange("188c3104ab6030c40d652595a2274527a4ad4105", "73d87444013a656f763feb38ce20c43670dc6230");
         
+        
+        /** TEST */
+        cm.setRange("e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704", "e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704");
+        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(24);
+        
+        System.out.println(list2.values());
+        CommitRange r = list2.get("e5c3e6aa76cf2b0bb0838ff6dcd3853656bff704");
+        System.out.println(r.get(cm.getScm()));
+        
+        System.exit(0);
+        
         // cm.setWeeksBack(12);
-        cm.setEveryNthCommit(1);
+        cm.setEveryNthCommit(200);
         cm.setThreads(40);
         
         
@@ -48,24 +62,28 @@ public class App
         
         bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
         
-        cm.setBugRepository(bugRepo);
+        //cm.setBugRepository(bugRepo);
         
         Map<String, CommitRange> list = cm.generateCommitListWithWeeks(52);
-        // cm.generateCommitList();
         
+        System.out.println(list.keySet());
+        
+        System.exit(0);
+        
+        // cm.generateCommitList();
+
         for(Entry<String, CommitRange> e : list.entrySet()) {
         	String ref = e.getKey();
         	
         	cm.setRange(e.getValue());
         	CMRepository repo = cm.analyze();
-        	
+
         	//logger.debug(repo.all());
         	
         	ChangeMetricsExporter exporter = new ChangeMetricsExporter(repo);
        	 	String outputPath = Paths.get("").toAbsolutePath().toString();
             exporter.toCSV(outputPath + "/testing/export_"+ref+".csv");
         }
-        
         
         
         /*for(String ref : commits) {
