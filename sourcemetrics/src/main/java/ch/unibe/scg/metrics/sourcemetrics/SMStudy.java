@@ -29,7 +29,7 @@ public class SMStudy implements Study {
 		.in(repository)
 		.through(range)
 		.process(new SMProcessor(repoInfo))
-		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
+		.filters(/*new OnlyModificationsWithFileTypes(Arrays.asList(".java")), */new OnlyInMainBranch())
 		.mine();
 	}
 	

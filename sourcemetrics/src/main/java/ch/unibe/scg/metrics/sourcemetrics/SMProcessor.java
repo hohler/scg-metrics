@@ -27,8 +27,6 @@ public class SMProcessor implements CommitVisitor {
 		SMCommit c = new SMCommit(commit);
 		repository.addCommit(c);
 		
-		System.out.println(commit.getHash());
-		
 		try {
 			repo.getScm().reset();
 			repo.getScm().checkout(commit.getHash());
