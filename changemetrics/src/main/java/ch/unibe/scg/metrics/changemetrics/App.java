@@ -19,6 +19,8 @@ public class App
 	
     public static void main( String[] args )
     {
+    	
+    	System.setProperty("git.maxdiff", "1000000"); // 100'000 default
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.changemetrics" );
         
@@ -42,7 +44,7 @@ public class App
         //System.exit(0);
         
         // cm.setWeeksBack(12);
-        cm.setEveryNthCommit(400);
+        cm.setEveryNthCommit(200);
         cm.setThreads(40);
         
         

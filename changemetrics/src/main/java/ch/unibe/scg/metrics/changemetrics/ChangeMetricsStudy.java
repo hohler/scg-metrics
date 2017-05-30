@@ -35,7 +35,7 @@ public class ChangeMetricsStudy implements Study {
 		.through(range)
 		.withThreads(threads)
 		.process(new ChangeMetricsProcessor(repoInfo, bugRepository))
-		.filters(new OnlyModificationsWithFileTypes(Arrays.asList(".java")), new OnlyInMainBranch())
+		.filters(/*new OnlyModificationsWithFileTypes(Arrays.asList(".java")), */new OnlyInMainBranch())
 		.mine();
 
 	}
