@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.repodriller.RepoDriller;
 import org.repodriller.domain.ChangeSet;
 import org.repodriller.domain.Commit;
+import org.repodriller.filter.range.BetweenDatesExtended;
 import org.repodriller.filter.range.CommitRange;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.scm.GitRemoteRepository;
@@ -31,6 +32,7 @@ public class ChangeMetrics {
 	private int everyNthCommit = 1;
 	private String firstRef;
 	private List<String> commitList;
+	private List<String> excludeCommits;
 	
 	private CMBugRepository bugRepository;
 	
@@ -113,6 +115,14 @@ public class ChangeMetrics {
 		new RepoDriller().start(study);
 		return study.getRepositoryInfo();
 	}
+	
+	public void excludeCommits(List<String> list) {
+		this.excludeCommits = new ArrayList<String>(list);
+	}
+	
+	public List<String> getExcludeCommits() {
+		return this.excludeCommits;
+	}
 
 	public void generateCommitList() {
 		ArrayList<String> results = new ArrayList<>();
@@ -133,6 +143,7 @@ public class ChangeMetrics {
 		
 		for(ChangeSet cs : changeSets) {
 			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0) {
+				if(isCommitExcluded(cs.getId())) continue;
 				results.add(cs.getId());
 			}
 			counter++;
@@ -176,6 +187,7 @@ public class ChangeMetrics {
 			//if(counter % everyNthCommit == 0 || everyNthCommit == 1) {
 			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0 || everyNthCommit == 1) {
 				String ref = cs.getId();
+				if(isCommitExcluded(cs.getId())) continue;
 				Commit c = scm.getCommit(ref);
 				
 				if(!c.isInMainBranch()) continue; // only MAIN branch!
@@ -193,7 +205,7 @@ public class ChangeMetrics {
 				}
 				start.add(Calendar.SECOND, -10);
 
-				CommitRange range = Commits.betweenDates(start,  end);
+				CommitRange range = new BetweenDatesExtended(start,  end, excludeCommits);
 				
 				results.put(ref, range);
 			}
@@ -209,5 +221,10 @@ public class ChangeMetrics {
 	
 	public SCM getScm() {
 		return this.repository.getScm();
+	}
+	
+	private boolean isCommitExcluded(String ref) {
+		if(excludeCommits == null) return false;
+		return excludeCommits.contains(ref);
 	}
 }

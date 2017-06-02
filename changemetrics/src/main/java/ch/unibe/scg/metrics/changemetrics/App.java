@@ -36,7 +36,10 @@ public class App
         /** TEST */
         cm.setEveryNthCommit(1);
         cm.setRange("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e", "3ad9e1fcc84a291f03f10efea1ba89522fb6b64e");
-        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(999999);
+        
+        cm.excludeCommits(Arrays.asList("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e"));
+        
+        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(52);
         
         System.out.println(list2.values());
         
