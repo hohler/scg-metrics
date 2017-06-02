@@ -185,7 +185,7 @@ public class ChangeMetrics {
 				Calendar start = Calendar.getInstance();
 				start.setTimeInMillis(c.getDate().getTimeInMillis());
 				if(weeksBack == 999999) {
-					start.set(Calendar.YEAR, 2005); // release of first git version
+					start.set(Calendar.YEAR, 1999); // release of first git version
 				} else {
 					start.add(Calendar.WEEK_OF_YEAR, -weeksBack);
 				}

@@ -34,14 +34,17 @@ public class App
         
         
         /** TEST */
-        //cm.setRange("d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3", "d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3");
-        //Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(4);
+        cm.setEveryNthCommit(1);
+        cm.setRange("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e", "3ad9e1fcc84a291f03f10efea1ba89522fb6b64e");
+        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(999999);
         
-        //System.out.println(list2.values());
-        //CommitRange r = list2.get("d2cc78e2dd2b7ad0171a15df9704fa4fc4f28cc3");
-        //System.out.println(r.get(cm.getScm()));
+        System.out.println(list2.values());
         
         //System.exit(0);
+        CommitRange r = list2.get("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e");
+        System.out.println(r.get(cm.getScm()));
+        
+        System.exit(0);
         
         // cm.setWeeksBack(12);
         cm.setEveryNthCommit(200);
