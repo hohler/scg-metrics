@@ -18,6 +18,9 @@ import ch.unibe.scg.metrics.szz.domain.SZZBugRepository;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 public class SZZ {
+	
+	private final String MAX_DIFF = "1000000";
+	
 	private SCMRepository repository;
 	private CommitRange range;
 	private int threads = 1;
@@ -42,6 +45,7 @@ public class SZZ {
 	
 	private void initDefaults() {
 		this.range = Commits.all();
+		System.setProperty("git.maxdiff", MAX_DIFF); // default was 100'000
 	}
 	
 	private void clone(String gitUrl) {

@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.repodriller.RepoDriller;
@@ -23,6 +22,8 @@ import ch.unibe.scg.metrics.changemetrics.domain.CMBugRepository;
 import ch.unibe.scg.metrics.changemetrics.domain.CMRepository;
 
 public class ChangeMetrics {
+	
+	private final String MAX_DIFF = "1000000";
 
 	private SCMRepository repository;
 	private CommitRange range;
@@ -48,6 +49,7 @@ public class ChangeMetrics {
 	
 	private void initDefaults() {
 		this.range = Commits.all();
+		System.setProperty("git.maxdiff", MAX_DIFF); // default was 100'000
 	}
 	
 	private void clone(String gitUrl) {

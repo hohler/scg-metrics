@@ -20,6 +20,9 @@ import org.repodriller.scm.SCMRepository;
 import ch.unibe.scg.metrics.sourcemetrics.domain.SMRepository;
 
 public class SourceMetrics {
+	
+	private final String MAX_DIFF = "1000000";
+	
 	private SCMRepository repository;
 	private CommitRange range;
 	private int everyNthCommit = 1;
@@ -41,6 +44,7 @@ public class SourceMetrics {
 	
 	private void initDefaults() {
 		this.range = Commits.all();
+		System.setProperty("git.maxdiff", MAX_DIFF); // default was 100'000
 	}
 	
 	private void clone(String gitUrl) {
