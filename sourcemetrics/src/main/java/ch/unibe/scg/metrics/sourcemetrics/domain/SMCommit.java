@@ -22,7 +22,7 @@ public class SMCommit {
 	
 	public SMCommit(Commit commit) {
 		this.hash = commit.getHash();
-		this.msg = commit.getHash();
+		this.msg = commit.getMsg();
 		files = new HashMap<>();
 	}
 
