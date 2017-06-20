@@ -1,5 +1,7 @@
 package ch.unibe.scg.metrics.sourcemetrics;
 
+import java.io.File;
+
 import org.repodriller.domain.Commit;
 import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.CommitVisitor;
@@ -30,14 +32,14 @@ public class SMProcessor implements CommitVisitor {
 		try {
 			repo.getScm().reset();
 			repo.getScm().checkout(commit.getHash());
-			String repoPath = repo.getPath() + "\\";
+			String repoPath = repo.getPath() + File.separator;
 			
 			CKReport report = new CK().calculate(repo.getPath());
 			
 			
 			for(CKNumber result : report.all()) {
 				SMFile f = new SMFile(result);
-				f.setFile(result.getFile().replace(repoPath, "").replace("\\", "/"));
+				f.setFile(result.getFile().replace(repoPath, "").replace(File.separator, "/"));
 				c.addFile(f);
 			}
 		} catch(Exception e) {
