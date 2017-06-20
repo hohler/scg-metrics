@@ -64,16 +64,23 @@ public class SZZProcessor2 implements CommitVisitor {
 			// blame the lines (we now have line numbers) in the specific commit (deleted: prior revision; added: after revision)
 			
 			// Get lines that have been changed in THIS current commit and sort out other ones
-			List<BlamedLine> blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
-			Iterator<BlamedLine> it = blames.iterator();
-			while(it.hasNext()) {
-				BlamedLine l = it.next();
-				if(!l.getCommit().equals(commit.getHash())) {
-					it.remove();
+			List<BlamedLine> blames = null;
+			
+			try {
+			
+				blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
+				Iterator<BlamedLine> it = blames.iterator();
+				while(it.hasNext()) {
+					BlamedLine l = it.next();
+					if(!l.getCommit().equals(commit.getHash())) {
+						it.remove();
+					}
+					//if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
+					//if(l.getLine().length() == 0) it.remove();
+					//if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
 				}
-				//if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
-				//if(l.getLine().length() == 0) it.remove();
-				//if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
+			} catch(RuntimeException e) {
+				System.err.println("PROBLEM WITH BLAME!");
 			}
 			
 			
@@ -111,7 +118,8 @@ public class SZZProcessor2 implements CommitVisitor {
 					}	
 				}
 				logger.debug(blames2);
-			} catch(RuntimeException e) {}
+			} catch(NullPointerException e) {}
+			catch(RuntimeException e) {}
 		}
 	}
 
