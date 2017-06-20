@@ -103,7 +103,7 @@ public class CMFile {
 	// TODO: make regex and remove post/prefix
 	private void countBugFixes(String msg, String hash, CMBugRepository bugRepository) {
 		if(bugRepository == null) {
-			if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfixes++;
+			if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix") && !msg.contains("fixture")) bugfixes++;
 			else if(msg.contains("bug")) bugfixes++;
 		} else {
 			if(bugRepository.isBugfixCommit(hash)) {

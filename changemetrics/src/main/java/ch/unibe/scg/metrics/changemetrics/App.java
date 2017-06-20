@@ -24,8 +24,9 @@ public class App
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.changemetrics" );
         
-        String path = "C:\\eclipse\\target\\repositories\\commons-lang";
+        //String path = "C:\\eclipse\\target\\repositories\\commons-lang";
         //String path = "C:\\eclipse\\target\\repositories\\flume";
+        String path = "C:\\Users\\Andi\\Documents\\scg-metrics\\changemetrics\\test-repo\\AcmeStore-master";
         
         //String path = "src/main/resources/cm_testrepo";
         ChangeMetrics cm = new ChangeMetrics(Paths.get(path));
@@ -35,17 +36,25 @@ public class App
         
         /** TEST */
         cm.setEveryNthCommit(1);
-        cm.setRange("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e", "3ad9e1fcc84a291f03f10efea1ba89522fb6b64e");
+        cm.setRange("ac964792db4e999edf2df1fd7521c0d968f005cc", "ac964792db4e999edf2df1fd7521c0d968f005cc");
         
-        cm.excludeCommits(Arrays.asList("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e"));
+        //cm.excludeCommits(Arrays.asList("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e"));
         
-        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(52);
+        Map<String, CommitRange> list2 = cm.generateCommitListWithWeeks(999999);
         
         System.out.println(list2.values());
         
         //System.exit(0);
-        CommitRange r = list2.get("3ad9e1fcc84a291f03f10efea1ba89522fb6b64e");
-        System.out.println(r.get(cm.getScm()));
+        CommitRange r = list2.get("ac964792db4e999edf2df1fd7521c0d968f005cc");
+        
+        cm.setRange(r);
+        CMRepository cmrepo = cm.analyze();
+        ChangeMetricsExporter exporterr = new ChangeMetricsExporter(cmrepo);
+   	 	String outputPathh = Paths.get("").toAbsolutePath().toString();
+        exporterr.toCSV(outputPathh + "/testing/export_ac964792db4e999edf2df1fd7521c0d968f005cc.csv");
+        
+        
+        //System.out.println(r.get(cm.getScm()));
         
         System.exit(0);
         

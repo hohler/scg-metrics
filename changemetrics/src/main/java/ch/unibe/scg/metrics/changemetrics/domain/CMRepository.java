@@ -43,5 +43,9 @@ public class CMRepository {
 	public synchronized Collection<CMFile> all() {
 		return files.values();
 	}
+	
+	public synchronized Map<String, CMFile> allAsMap() {
+		return files;
+	}
 
 }
