@@ -28,6 +28,7 @@ public class SourceMetrics {
 	private int everyNthCommit = 1;
 	private String firstRef;
 	private List<String> commitList;
+	private List<String> excludeCommits;
 	
 	private Logger logger = Logger.getLogger(SourceMetrics.class);
 	
@@ -83,6 +84,14 @@ public class SourceMetrics {
 		return new ArrayList<String>(commitList);
 	}
 	
+	public void excludeCommits(List<String> list) {
+		this.excludeCommits = new ArrayList<String>(list);
+	}
+	
+	public List<String> getExcludeCommits() {
+		return this.excludeCommits;
+	}
+	
 	public SMRepository analyze(List<String> commits) {
 		SMStudy study;
 		study = new SMStudy(repository, Commits.list(commits));
@@ -120,7 +129,9 @@ public class SourceMetrics {
                 .collect(Collectors.toList());*/
 		
 		if(everyNthCommit == 0) {
-			if(changeSets.size() > 0) results.add(changeSets.get(0).getId());
+			if(changeSets.size() > 0) {
+				if(!isCommitExcluded(changeSets.get(0).getId())) results.add(changeSets.get(0).getId());
+			}
 			commitList = results;
 			return;
 		}
@@ -134,6 +145,9 @@ public class SourceMetrics {
 			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0) {
 				
 				String ref = cs.getId();
+				
+				if(isCommitExcluded(ref)) continue;
+				
 				Commit c = scm.getCommit(ref);
 				
 				if(!c.isInMainBranch()) continue; // only MAIN branch!
@@ -149,5 +163,10 @@ public class SourceMetrics {
 		}
 		
 		commitList = results;
+	}
+	
+	private boolean isCommitExcluded(String ref) {
+		if(excludeCommits == null) return false;
+		return excludeCommits.contains(ref);
 	}
 }
