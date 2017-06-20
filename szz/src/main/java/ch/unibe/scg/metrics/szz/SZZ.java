@@ -39,7 +39,7 @@ public class SZZ {
 	}
 	
 	public SZZ(Path path) {
-		this.repository = GitRepository.singleProject(path.toString());
+		this.repository = GitRepository.singleProject(path.toString(), true);
 		initDefaults();
 	}
 	

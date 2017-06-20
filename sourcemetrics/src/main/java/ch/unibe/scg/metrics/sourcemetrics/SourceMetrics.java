@@ -38,7 +38,7 @@ public class SourceMetrics {
 	}
 	
 	public SourceMetrics(Path path) {
-		this.repository = GitRepository.singleProject(path.toString());
+		this.repository = GitRepository.singleProject(path.toString(), true);
 		initDefaults();
 	}
 	
