@@ -27,6 +27,7 @@ public class SZZ {
 	private int everyNthCommit = 1;
 	private String firstRef;
 	private List<String> commitList;
+	private List<String> excludeCommits;
 	
 	private SZZBugRepository bugRepository;
 	
@@ -88,13 +89,28 @@ public class SZZ {
 		return new ArrayList<String>(commitList);
 	}
 	
+	public void excludeCommits(List<String> list) {
+		this.excludeCommits = new ArrayList<String>(list);
+	}
+	
+	public List<String> getExcludeCommits() {
+		return this.excludeCommits;
+	}
+	
 	public SZZRepository analyze(List<String> commits) {
+		
 		SZZStudy study;
 		study = new SZZStudy(repository, Commits.list(commits), threads);
 		study.setBugRepository(bugRepository);
 		
 		new RepoDriller().start(study);
-		return study.getRepositoryInfo();
+		
+		SZZStudy2 study2;
+		study2 = new SZZStudy2(repository, Commits.list(commits), threads, study.getRepositoryInfo());
+		
+		new RepoDriller().start(study2);
+		
+		return study2.getRepositoryInfo();
 	}
 	
 	public SZZRepository analyze() {
@@ -130,7 +146,10 @@ public class SZZ {
 		firstRef = changeSets.get(changeSets.size()-1).getId();
 		
 		for(ChangeSet cs : changeSets) {
-			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0) {
+			
+			if(isCommitExcluded(cs.getId())) continue;
+			
+			if((counter % everyNthCommit == 0 && counter != 0) || counter == 0 || everyNthCommit == 1) {
 				results.add(cs.getId());
 			}
 			counter++;
@@ -150,5 +169,10 @@ public class SZZ {
 
 	public void setBugRepository(SZZBugRepository bugRepository) {
 		this.bugRepository = bugRepository;
+	}
+	
+	private boolean isCommitExcluded(String ref) {
+		if(excludeCommits == null) return false;
+		return excludeCommits.contains(ref);
 	}
 }

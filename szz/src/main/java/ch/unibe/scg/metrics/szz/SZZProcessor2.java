@@ -161,9 +161,7 @@ public class SZZProcessor2 implements CommitVisitor {
 			
 			List<String> alreadyIncreasedCommits = new ArrayList<>();
 						
-			for(String hash : buggedCommits) {
-				
-				
+			for(String hash : buggedCommits) {	
 				CommitRange cr = Commits.range(hash, commit.getHash());
 				List<ChangeSet> sets = cr.get(repo.getScm());
 				
