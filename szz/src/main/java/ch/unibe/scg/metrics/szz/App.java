@@ -19,15 +19,18 @@ static Logger logger = Logger.getLogger(App.class);
     	logger.debug("test");
         System.out.println( "Testing scg-metrics.szz" );
         
-        String path = "C:\\eclipse\\target\\repositories\\flume";
+        //String path = "C:\\eclipse\\target\\repositories\\flume";
         //String path = "src/main/resources/szz_testrepo";
+        //String path = "C:\\Users\\Andi\\Documents\\scg-metrics\\szz\\test-repo\\AcmeStore-master";
+        String path = "C:\\eclipse\\target\\repositories\\defects4j-lang";
+        
         SZZ szz = new SZZ(Paths.get(path));
         
         /*szz.setRange("188c3104ab6030c40d652595a2274527a4ad4105", "73d87444013a656f763feb38ce20c43670dc6230");
         szz.setEveryNthCommit(10);
         szz.generateCommitList();*/
         
-        szz.setThreads(40);
+        //szz.setThreads(40);
         
         SZZBugRepository bugRepo = new SZZBugRepository();
         
@@ -39,7 +42,7 @@ static Logger logger = Logger.getLogger(App.class);
 	        //"34e52bafc4c91abf45b75f8c688058e23f956740"
         };
         
-        bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
+        //bugRepo.setBugCommits(new HashSet<String>(Arrays.asList(commits)));
         
         //szz.setBugRepository(bugRepo);
         

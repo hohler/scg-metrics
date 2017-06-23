@@ -48,7 +48,7 @@ public class SZZProcessor implements CommitVisitor {
 			boolean bugfix = false;
 			if(bugRepository == null) {
 				String msg = commit.getMsg();	
-				if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix")) bugfix = true;
+				if(msg.contains("fix") && !msg.contains("postfix") && !msg.contains("prefix") && !msg.contains("fixture")) bugfix = true;
 				else if(msg.contains("bug")) bugfix = true;
 			} else {
 				if(bugRepository.isBugfixCommit(commit.getHash())) bugfix = true;

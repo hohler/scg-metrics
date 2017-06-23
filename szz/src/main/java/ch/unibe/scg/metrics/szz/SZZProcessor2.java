@@ -1,8 +1,12 @@
 package ch.unibe.scg.metrics.szz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.repodriller.domain.ChangeSet;
@@ -15,6 +19,10 @@ import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.BlamedLine;
 import org.repodriller.scm.CommitVisitor;
 import org.repodriller.scm.SCMRepository;
+import org.wickedsource.diffparser.api.UnifiedDiffParser;
+import org.wickedsource.diffparser.api.model.Diff;
+import org.wickedsource.diffparser.api.model.Hunk;
+import org.wickedsource.diffparser.api.model.Line;
 
 import ch.unibe.scg.metrics.szz.domain.SZZCommit;
 import ch.unibe.scg.metrics.szz.domain.SZZFile;
@@ -56,70 +64,118 @@ public class SZZProcessor2 implements CommitVisitor {
 			
 			if(commit.getModifications().size() > MAX_MODIFICATIONS) continue; // to much modifications for a bugfix commit
 			
-			// TODO improve SZZ
-			// use https://github.com/thombergs/diffparser and improve: add line numbers
+			Set<String> buggedCommits = new HashSet<>();
+			// perhaps use https://github.com/stkent/githubdiffparser has some bugfixes!
+			UnifiedDiffParser parser = new UnifiedDiffParser();
+			List<Diff> diffs = parser.parse((modification.getDiff()+"\n").getBytes());
 			
-			// parse modification.getDiff();
-			// look which lines were added and which lines were deleted
-			// blame the lines (we now have line numbers) in the specific commit (deleted: prior revision; added: after revision)
-			
-			// Get lines that have been changed in THIS current commit and sort out other ones
-			List<BlamedLine> blames = null;
-			
-			try {
-			
-				blames = repo.getScm().blame(modification.getFileName(), commit.getHash(), false);
-				Iterator<BlamedLine> it = blames.iterator();
-				while(it.hasNext()) {
-					BlamedLine l = it.next();
-					if(!l.getCommit().equals(commit.getHash())) {
-						it.remove();
-					}
-					//if(l.getLine().matches("^( *)([*]+|[//]|[*/])+(.*)$")) it.remove();
-					//if(l.getLine().length() == 0) it.remove();
-					//if(l.getLine().matches("^(import |package )(.*)$")) it.remove();
+			for(Diff diff : diffs) {
+				
+				Map<Integer, Line> removed = new HashMap<>();
+				Map<Integer, Line> added = new HashMap<>();
+				Map<Integer, Line> neutral = new HashMap<>();
+				
+				Map<Hunk, List<Line>> oldLines = new HashMap<>(); // used for calculating line numbers
+				Map<Hunk, List<Line>> newLines = new HashMap<>();
+				
+				for(Hunk hunk : diff.getHunks()) {
+					oldLines.put(hunk, new ArrayList<>());
+					newLines.put(hunk, new ArrayList<>());
+					for(Line line : hunk.getLines()) {
+						if(line.getLineType() == Line.LineType.FROM || line.getLineType() == Line.LineType.NEUTRAL) {
+							oldLines.get(hunk).add(line);
+						}
+						if(line.getLineType() == Line.LineType.TO || line.getLineType() == Line.LineType.NEUTRAL) {
+							newLines.get(hunk).add(line);
+						}
+					}					
 				}
-			} catch(RuntimeException e) {
-				System.err.println("PROBLEM WITH BLAME!");
+				
+				for(Hunk hunk : diff.getHunks()) {
+					
+					for(Line line : hunk.getLines()) {
+						if(line.getContent().trim().length() == 0) continue;
+						//if(line.getContent().trim().matches("^(import\\s.*|\\}|\\{)$")) continue;
+						if(line.getContent().trim().matches("^(import|package)\\s.*$")) continue;
+						//if(line.getContent().trim().startsWith("import ")) continue;
+						
+						if(line.getLineType() == Line.LineType.FROM) {
+							int fromLineNumber = oldLines.get(hunk).indexOf(line) + hunk.getFromFileRange().getLineStart();
+							removed.put(fromLineNumber, line);
+						} else
+						if(line.getLineType() == Line.LineType.TO) {
+							int toLineNumber = newLines.get(hunk).indexOf(line) + hunk.getToFileRange().getLineStart();
+							added.put(toLineNumber, line);
+						} else
+						if(line.getLineType() == Line.LineType.NEUTRAL) {
+							int lineNumber = oldLines.get(hunk).indexOf(line) + hunk.getFromFileRange().getLineStart();
+							neutral.put(lineNumber, line);
+						}
+					}
+				}
+				
+				if(removed.size() == 0 && added.size() == 0) continue;
+
+				String filePathToBlame = modification.getNewPath()!=null && !modification.getNewPath().equals("/dev/null") ? modification.getNewPath() : modification.getOldPath();
+				
+				// if no line has been removed
+				if(removed.size() == 0) {
+					// blame prior to this commit and check line numbers with neutral lines to find the bug introducing commit
+					try {
+						List<BlamedLine> blames = repo.getScm().blame(filePathToBlame, commit.getHash(), true);
+						Iterator<BlamedLine> it = blames.iterator();
+						while(it.hasNext()) {
+							BlamedLine l = it.next();
+							
+							Line neutralLine = neutral.get(l.getLineNumber());
+							if(neutralLine != null && !neutralLine.getContent().trim().equals("}")) {
+								buggedCommits.add(l.getCommit());
+								break;
+							}
+						}
+					} catch(RuntimeException e) {
+						System.err.println("File could not be blamed: " + commit.getHash() + " -" + filePathToBlame);
+						//e.printStackTrace();
+					}
+				} else {
+				// if  lines have been removed (and added)
+					// blame prior to this commit and check line numbers
+					try {
+						List<BlamedLine> blames = repo.getScm().blame(filePathToBlame, commit.getHash(), true);
+						Iterator<BlamedLine> it = blames.iterator();
+						while(it.hasNext()) {
+							BlamedLine l = it.next();
+							
+							Line removedLine = removed.get(l.getLineNumber());
+							if(removedLine != null) {
+								buggedCommits.add(l.getCommit());
+							}
+						}
+					} catch(RuntimeException e) {
+						System.err.println("File could not be blamed: " + commit.getHash() + " -" + filePathToBlame);
+						e.printStackTrace();
+					}
+				}
+				
 			}
 			
-			
-			try {
+			List<String> alreadyIncreasedCommits = new ArrayList<>();
+						
+			for(String hash : buggedCommits) {
 				
-				// get the blames before THIS current commit and match the line numbers with the changed lines in THIS current commit
-				// if the line does not exist, sort it out
 				
-				List<BlamedLine> blames2 = repo.getScm().blame(modification.getFileName(), commit.getHash(), true);
+				CommitRange cr = Commits.range(hash, commit.getHash());
+				List<ChangeSet> sets = cr.get(repo.getScm());
 				
-				Iterator<BlamedLine> it2 = blames2.iterator();
-				while(it2.hasNext()) {
-					BlamedLine l = it2.next();
-					boolean exists = blames.stream().anyMatch(e -> e.getLineNumber() == l.getLineNumber());
-					if(!exists) it2.remove();
+				for(ChangeSet s : sets) {
+					if(s.getId().equals(commit.getHash())) continue; // introduced in current commit
+					if(alreadyIncreasedCommits.contains(s.getId())) continue; // commit was already increased
+					SZZCommit c = file.getCommit(s.getId());
+					if(c == null) continue; // file is not present in the changeset s
+					c.increaseBugs(1);
+					alreadyIncreasedCommits.add(c.getHash());
 				}
-				
-				// get for each blamed line all the commits between the introducing commit of the line and THIS current commit
-				// increase bug count in all commits by one
-				it2 = blames2.iterator();
-				List<String> alreadyIncreasedCommits = new ArrayList<>();
-				while(it2.hasNext()) {
-					BlamedLine l = it2.next();
-					
-					CommitRange cr = Commits.range(l.getCommit(), commit.getHash());
-					List<ChangeSet> sets = cr.get(repo.getScm());
-					
-					for(ChangeSet s : sets) {
-						if(s.getId().equals(commit.getHash())) continue; // introduced in current commit
-						if(alreadyIncreasedCommits.contains(s.getId())) continue; // commit was already increased
-						SZZCommit c = file.getCommit(s.getId());
-						if(c == null) continue; // file is not present in the changeset s
-						c.increaseBugs(1);
-						alreadyIncreasedCommits.add(c.getHash());
-					}	
-				}
-				logger.debug(blames2);
-			} catch(NullPointerException e) {}
-			catch(RuntimeException e) {}
+			}
 		}
 	}
 
