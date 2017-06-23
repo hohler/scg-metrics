@@ -31,6 +31,10 @@ public class SZZRepository {
 		return files.get(m.getNewPath());
 	}
 	
+	public synchronized SZZFile getFileByPath(String filePath) {
+		return files.get(filePath);
+	}
+	
 	public synchronized void rename(Modification m) {
 		String oldPath = m.getOldPath();
 		String newPath = m.getNewPath();
