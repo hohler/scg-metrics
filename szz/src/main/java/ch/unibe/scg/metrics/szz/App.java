@@ -7,6 +7,8 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 
 import ch.unibe.scg.metrics.szz.domain.SZZBugRepository;
+import ch.unibe.scg.metrics.szz.domain.SZZFile;
+import ch.unibe.scg.metrics.szz.domain.SZZCommit;
 import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 
@@ -68,11 +70,12 @@ static Logger logger = Logger.getLogger(App.class);
         szz.generateCommitList();
         SZZRepository repo = szz.analyze(szz.getCommitList());
         
-        /*for(SZZFile f : repo.all()) {
+        for(SZZFile f : repo.all()) {
+        	if(!f.getFile().equals("src/model/CD.java")) continue;
         	for(SZZCommit c : f.getCommits()) {
         		System.out.println(c);	
         	}
-        }*/
+        }
         
         //logger.debug(repo.all());
        

@@ -196,7 +196,7 @@ public class MetricsTest {
 		
 		Collection<SZZCommit> commits = f.getCommits();
 		Assert.assertNotNull(commits);
-		Assert.assertEquals(2, commits.size());
+		Assert.assertEquals(3, commits.size());
 		
 		Map<String, SZZCommit> map = new HashMap<>();
 		for(SZZCommit c : commits) {
@@ -272,7 +272,7 @@ public class MetricsTest {
 		
 		Collection<SZZCommit> commits = f.getCommits();
 		Assert.assertNotNull(commits);
-		Assert.assertEquals(9, commits.size());
+		Assert.assertEquals(13, commits.size());
 		
 		Map<String, SZZCommit> map = new HashMap<>();
 		for(SZZCommit c : commits) {
@@ -344,7 +344,7 @@ public class MetricsTest {
 		
 		Collection<SZZCommit> commits = f.getCommits();
 		Assert.assertNotNull(commits);
-		Assert.assertEquals(9, commits.size());
+		Assert.assertEquals(14, commits.size());
 		
 		Map<String, SZZCommit> map = new HashMap<>();
 		for(SZZCommit c : commits) {

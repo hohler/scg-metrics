@@ -169,7 +169,12 @@ public class SZZProcessor2 implements CommitVisitor {
 					if(s.getId().equals(commit.getHash())) continue; // introduced in current commit
 					if(alreadyIncreasedCommits.contains(s.getId())) continue; // commit was already increased
 					SZZCommit c = file.getCommit(s.getId());
-					if(c == null) continue; // file is not present in the changeset s
+					if(c == null) {
+						// the file was not present in that commit, so create a new one for that file
+						c = new SZZCommit();
+						c.setHash(s.getId());
+						file.addCommit(c);
+					}
 					c.increaseBugs(1);
 					alreadyIncreasedCommits.add(c.getHash());
 				}
