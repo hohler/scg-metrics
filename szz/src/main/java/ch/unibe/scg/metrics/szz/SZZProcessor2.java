@@ -153,7 +153,7 @@ public class SZZProcessor2 implements CommitVisitor {
 						}
 					} catch(RuntimeException e) {
 						System.err.println("File could not be blamed: " + commit.getHash() + " -" + filePathToBlame);
-						e.printStackTrace();
+						// e.printStackTrace();
 					}
 				}
 				
