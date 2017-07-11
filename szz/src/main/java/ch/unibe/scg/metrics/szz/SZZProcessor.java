@@ -1,5 +1,6 @@
 package ch.unibe.scg.metrics.szz;
 
+import org.apache.log4j.Logger;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 import org.repodriller.domain.ModificationType;
@@ -14,6 +15,8 @@ import ch.unibe.scg.metrics.szz.domain.SZZRepository;
 
 
 public class SZZProcessor implements CommitVisitor {
+	
+	static Logger logger = Logger.getLogger(SZZProcessor.class);
 
 	// private static final int MAX_MODIFICATIONS = 10;
 	
@@ -57,6 +60,7 @@ public class SZZProcessor implements CommitVisitor {
 			
 			szzC.setBugfix(bugfix);
 		}
+		logger.debug("1: "+commit.getHash());
 	}
 
 	public String name() {

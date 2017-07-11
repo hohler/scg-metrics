@@ -180,6 +180,7 @@ public class SZZProcessor2 implements CommitVisitor {
 				}
 			}
 		}
+		logger.debug("2: "+commit.getHash());
 	}
 
 	public String name() {
